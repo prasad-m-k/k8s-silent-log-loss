@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: receiver, namespace: sll}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: receiver}}
+  template:
+    metadata: {labels: {app: receiver}}
+    spec:
+      nodeSelector: {kubernetes.io/hostname: sll-control-plane}
+      tolerations: [{key: node-role.kubernetes.io/control-plane, effect: NoSchedule}]
+      containers:
+        - name: receiver
+          image: python:3.12-slim
+          command: ["python3", "-u", "/opt/receiver/receiver.py"]
+          volumeMounts: [{name: code, mountPath: /opt/receiver}]
+      volumes:
+        - name: code
+          configMap: {name: receiver-code}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: receiver, namespace: sll}
+spec:
+  selector: {app: receiver}
+  ports: [{port: 8080}]

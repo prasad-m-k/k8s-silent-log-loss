@@ -1,0 +1,28 @@
+# Sequence-marked log generator. RATE_BYTES is set per scenario by run_experiment.sh.
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: loggen, namespace: sll}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: loggen}}
+  template:
+    metadata:
+      labels: {app: loggen}
+      annotations: {prometheus.io/scrape: "true", prometheus.io/port: "9102"}
+    spec:
+      nodeSelector: {kubernetes.io/hostname: sll-worker}
+      containers:
+        - name: app
+          image: python:3.12-slim
+          command: ["python3", "-u", "/opt/loggen/loggen.py"]
+          env:
+            - {name: RATE_BYTES, value: "8000000"}
+            - name: POD_UID
+              valueFrom: {fieldRef: {fieldPath: metadata.uid}}
+            - {name: CONTAINER_NAME, value: app}
+          resources:
+            requests: {cpu: "1", ephemeral-storage: "1Gi"}
+          volumeMounts: [{name: code, mountPath: /opt/loggen}]
+      volumes:
+        - name: code
+          configMap: {name: loggen-code}

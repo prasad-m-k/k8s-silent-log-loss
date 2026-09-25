@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite the preprint."
+title: "Silent Log Loss in Kubernetes: Mechanisms, Detection, and a Sequence-Marker Solution (code and data)"
+authors:
+  - family-names: "MK"
+    given-names: "Prasad"
+    orcid: "https://orcid.org/0009-0004-9496-6339"
+    email: "prasad.rocklin@gmail.com"
+date-released: 2026-09-25
+license: MIT
+repository-code: "https://github.com/prasad-m-k/k8s-silent-log-loss"

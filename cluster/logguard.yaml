@@ -1,0 +1,29 @@
+# logguard DaemonSet: offset auditor + log escrow (agent/logguard.py).
+# Needs root on the host path so it can hard-link files the kubelet owns.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: {name: logguard, namespace: sll}
+spec:
+  selector: {matchLabels: {app: logguard}}
+  template:
+    metadata: {labels: {app: logguard}}
+    spec:
+      containers:
+        - name: logguard
+          image: python:3.12-slim
+          command: ["python3", "-u", "/opt/logguard/logguard.py",
+                    "--pods-root", "/var/log/pods",
+                    "--escrow-dir", "/var/log/escrow",
+                    "--drain-dir", "/var/log/escrow-recovered",
+                    "--shipper-db", "/var/log/flb_kube.db",
+                    "--poll", "0.1", "--cap-bytes", "2000000000",
+                    "--metrics-file", "/var/log/logguard.prom"]
+          securityContext: {privileged: true, runAsUser: 0}
+          volumeMounts:
+            - {name: varlog, mountPath: /var/log}
+            - {name: code, mountPath: /opt/logguard}
+      volumes:
+        - name: varlog
+          hostPath: {path: /var/log}
+        - name: code
+          configMap: {name: logguard-code}

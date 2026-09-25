@@ -1,0 +1,18 @@
+{
+ "lines_written": 76596,
+ "lines_shipped": 40638,
+ "lines_lost_without_escrow": 35958,
+ "lines_lost_with_escrow": 0,
+ "duplicate_lines": 663,
+ "files_finalized": 11,
+ "never_tracked_files": 0,
+ "auditor_unread_bytes": 9374976,
+ "true_unread_bytes": 9205248,
+ "auditor_error_pct": 1.844,
+ "metrics": [
+  "logguard_lost_bytes_total 9374976",
+  "# TYPE logguard_lost_files_total counter",
+  "logguard_lost_files_total 10"
+ ]
+}
+PASS

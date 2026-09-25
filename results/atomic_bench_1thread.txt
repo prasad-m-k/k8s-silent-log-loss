@@ -1,0 +1,6 @@
+run 0: 6.81 ns/increment (final=50000000)
+run 1: 6.36 ns/increment (final=50000000)
+run 2: 6.42 ns/increment (final=50000000)
+run 3: 6.42 ns/increment (final=50000000)
+run 4: 6.38 ns/increment (final=50000000)
+threads=1 best=6.36 ns/increment

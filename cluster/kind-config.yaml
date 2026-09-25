@@ -1,0 +1,21 @@
+# kind cluster for the silent-log-loss evaluation (Section 11 of the paper).
+# One worker node so every workload shares the same kubelet and disk.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        nodeRegistration:
+          kubeletExtraArgs: {}
+      - |
+        kind: KubeletConfiguration
+        containerLogMaxSize: "10Mi"
+        containerLogMaxFiles: 5
+        containerLogMaxWorkers: 1
+        containerLogMonitorInterval: "10s"
+        evictionHard:
+          nodefs.available: "10%"
+          imagefs.available: "15%"
